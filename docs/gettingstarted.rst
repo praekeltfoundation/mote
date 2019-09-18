@@ -6,36 +6,51 @@ Getting Started
 Installation
 ------------
 
-First, you must add Mote to your project's ``requirements.txt`` file, like so:
+Mote is built using the Django web framework, which means installation is fairly simple
+over a wide range of operating systems.
+
+Standalone
+**********
+
+Run Mote using ``mote-lib-base`` as the only pattern library:
 
 ::
+    - virtualenv ve
+    - ./ve/bin/pip install -r example/requirements.txt
+    - ./ve/bin/python manage.py migrate --run-syncdb --settings=example.settings
+    - ./ve/bin/python manage.py runserver 0.0.0.0:8000 --settings=example.settings
 
-    mote-prk
+Browse to `http://localhost:8000/mote/` to view the pattern libraries.
 
-Next, you must create a route to Mote in ``urls.py``:
+As part of a Django project
+***************************
 
-.. code-block:: py
+If you are using Django you may want to include Mote as part of your project.
 
-    url(r"^mote/", include("mote.urls", namespace="mote")),
+#. Install or add ``mote-prk`` and ``mote-lib-base`` to your Python path.
 
-Next, you should update the template loaders to also load templates using the loader ``mote.loaders.app_directories.Loader``.
+#. Add ``mote`` to your ``INSTALLED_APPS`` setting.
+
+#. Register the URL pattern ``url(r"^mote/", include("mote.urls", namespace="mote"))``.
+
+Update the template loaders to include ``mote.loaders.app_directories.Loader``.
 When defining custom loaders you may also be required to set the ``APP_DIRS`` template option to ``False``.
 
-A sample ``TEMPLATE`` for a default simple Django app may look like this:
+A sample ``TEMPLATES`` for a simple Django app typically has this form:
 
 .. code-block:: py
 
     TEMPLATES = [
         {
-            'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'DIRS': [],
-            'APP_DIRS': False,
-            'OPTIONS': {
-                'context_processors': [
-                    'django.template.context_processors.debug',
-                    'django.template.context_processors.request',
-                    'django.contrib.auth.context_processors.auth',
-                    'django.contrib.messages.context_processors.messages',
+            "BACKEND": "django.template.backends.django.DjangoTemplates",
+            "DIRS": [],
+            "APP_DIRS": False,
+            "OPTIONS": {
+                "context_processors": [
+                    "django.template.context_processors.debug",
+                    "django.template.context_processors.request",
+                    "django.contrib.auth.context_processors.auth",
+                    "django.contrib.messages.context_processors.messages",
                 ],
                 "loaders": [
                     "django.template.loaders.filesystem.Loader",
@@ -46,102 +61,34 @@ A sample ``TEMPLATE`` for a default simple Django app may look like this:
         },
     ]
 
-Lastly, ensure that the ``mote/`` root directory is in the parent of one of the ``INSTALLED_APPS``, else mote won't be able to locate it.
-This means that if you just set up pattern library using mote and for no other reason, you need to add the project as an application in ``INSTALLED_APPS``.
+    # Greatly speed up rendering during development
+    if DEBUG:
+        loaders = TEMPLATES[0]["OPTIONS"]["loaders"]
+        TEMPLATES[0]["OPTIONS"]["loaders"] = \
+            [("mote.loaders.cached.Loader", loaders)]
 
-Congratulations, you may now browse to ```http://localhost:8000/mote``.
+You may now start the Django instance and browse to
+``http://localhost:8000/mote``. The only available pattern library at this
+point is the base library.
 
-Directory Structure
----------------------------------
+Settings
+--------
 
-In the root of your project, you must create a ``mote/`` directory, the minimal structure of which should follow this paradigm:
+The ``MOTE`` setting controls Mote' operation. It is a dictionary:
 
-::
+.. code-block:: py
 
-    .
-    └── mote
-        └── projects
-            └── project
-                ├── aspect
-                │   └── src
-                │       ├── patterns
-                │       │   ├── category
-                │       │       ├── pattern
+    MOTE = {
+        "project": "myproject",
+        "directories": ["/path/to/pattern-lib-one", "/path/to/pattern-lib-two"]
+    }
 
+``project`` is only required when using the Django API. See the API section for
+more information.
 
-Below is a more complex directory structure consisting of multiple projects, aspects (think the distinct parts of a project which may require completely different sets of templates, such as website vs. emails), and pattern categories following the Atomic Design convention.
+``directories`` tells Mote where to find the pattern libraries. Pattern libraries
+that are packaged as Django Apps are automatically included. Note the directory
+declaration must not include the ``mote`` subdirectory, but the actual directory
+on the filesystem must. In our example there must therefore exist a directory
+``/path/to/pattern-lib-one/mote/``.
 
-::
-
-    .
-    └── mote
-        └── projects
-            ├── project1
-            │   ├── emails
-            │   │   └── src
-            │   │       └── patterns
-            │   │           ├── atoms
-            │   │           ├── molecules
-            │   │           ├── organisms
-            │   │           ├── pages
-            │   │           └── templates
-            │   ├── intranet
-            │   │   └── src
-            │   │       └── patterns
-            │   │           ├── atoms
-            │   │           ├── molecules
-            │   │           ├── organisms
-            │   │           ├── pages
-            │   │           └── templates
-            │   └── website
-            │       └── src
-            │           └── patterns
-            │               ├── atoms
-            │               ├── molecules
-            │               ├── organisms
-            │               ├── pages
-            │               └── templates
-            └── project2
-                ├── emails
-                │   └── src
-                │       └── patterns
-                │           ├── atoms
-                │           ├── molecules
-                │           ├── organisms
-                │           ├── pages
-                │           └── templates
-                ├── intranet
-                │   └── src
-                │       └── patterns
-                │           ├── atoms
-                │           ├── molecules
-                │           ├── organisms
-                │           ├── pages
-                │           └── templates
-                └── website
-                    └── src
-                        └── patterns
-                            ├── atoms
-                            ├── molecules
-                            ├── organisms
-                            ├── pages
-                            └── templates
-
-Pattern Directory Structure
----------------------------
-
-A typical Mote pattern requires the following structure in order to render that component:
-
-::
-
-    category
-    └── example-pattern
-        ├── element.html
-        ├── index.html
-        ├── json
-        │   └── data.json
-        └── metadata.json
-
-Look at this Gist_ to get an idea of what the contents of each file are expected to look like.
-
-.. _Gist: https://gist.github.com/CSergienko/023b0066c4dedf74c98ff082d81e478c

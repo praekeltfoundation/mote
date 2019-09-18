@@ -1,24 +1,30 @@
 Mote - the pattern library framework
 ====================================
 
-.. figure:: https://travis-ci.org/praekelt/mote.svg?branch=develop
+.. figure:: https://travis-ci.org/praekeltfoundation/mote.svg?branch=develop
    :align: center
    :alt: Travis
 
 Quick start
 ===========
 
-Mote is intended to be a standalone library, not a project, but it can indeed be run with::
+Run Mote using ``mote.lib.base`` as the only pattern library::
 
     - virtualenv ve
-    - ./ve/bin/pip install -r mote/tests/requirements/19.txt
-    - ./ve/bin/python manage.py migrate --run-syncdb --settings=mote.tests.settings.19
-    - ./ve/bin/python manage.py runserver 0.0.0.0:8000 --settings=mote.tests.settings.19
-
-Running Mote by reusing the test settings and requirements means the test pattern libraries
-located at `mote/tests/mote/projects/` are loaded.
+    - ./ve/bin/pip install -r example/requirements.txt
+    - ./ve/bin/python manage.py migrate --run-syncdb --settings=example.settings
+    - ./ve/bin/python manage.py runserver 0.0.0.0:8000 --settings=example.settings
 
 Browse to `http://localhost:8000/mote/` to view the pattern libraries.
+
+Building the docs
+=================
+
+virtualenv ve
+source ve/bin/activate
+pip sphinx install sphinx_rtd_theme
+cd docs
+make html
 
 Documentation
 =============

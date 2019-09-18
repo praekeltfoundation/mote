@@ -1,7 +1,9 @@
 import json
 
 from django import template
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseBadRequest,\
+    HttpResponseServerError
+from django.utils.datastructures import MultiValueDictKeyError
 from django.views.generic.base import View
 
 from rest_framework import serializers, generics
@@ -18,7 +20,7 @@ class BaseSerializer(serializers.Serializer):
 
     def get_rendered(self, obj):
         # Let the template tag do the rendering for us
-        src = "{% load mote_tags %}{% render_element object data=data %}"
+        src = "{% load mote_tags %}{% render object %}"
         context = template.Context({
             "object": obj,
             "request": self.context["request"]
@@ -83,13 +85,18 @@ class Multiplex(View):
 
     def get(self, request, *args, **kwargs):
         try:
+            project_id = request.GET["project_id"]
+        except (KeyError, MultiValueDictKeyError):
+            project_id = None
+
+        try:
             calls = json.loads(request.GET["calls"])
         except ValueError:
             return HttpResponseBadRequest()
 
         results = []
         for call in calls:
-            obj = get_object_by_dotted_name(call["id"])
+            obj = get_object_by_dotted_name(call["id"], project_id=project_id)
             view_klass = globals()[obj.__class__.__name__ + "Detail"]
             view = view_klass().as_view()(
                 request=request,
@@ -97,6 +104,8 @@ class Multiplex(View):
                 data=call["data"],
                 format="json"
             )
+            if view.status_code == 500:
+                return HttpResponseServerError(view.content)
             rendered = view.render().content
             results.append(json.loads(rendered))
 

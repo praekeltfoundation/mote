@@ -81,6 +81,13 @@
 	            document.querySelector(target).setAttribute('src', url);
 	
 	            linksOutButton.setAttribute('href', url);
+	
+	            // Toggle the example / usage area
+	            var dottedName = el.getAttribute('data-element-dotted-name');
+	            // No clue why querySelector causes issues. Use jQuery.
+	            //document.querySelector('.element-usage').setAttribute('style': 'display: none');
+	            $('.element-usage').hide();
+	            document.querySelector('[data-usage-dotted-name="' + dottedName + '"]').setAttribute('style', 'display: auto');
 	        });
 	    }
 	

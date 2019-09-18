@@ -14,12 +14,13 @@ def get_version(fname):
 
 
 setup(
-    name="mote-prk",
+    name="mote-praekelt",
     version=get_version('mote/__init__.py'),
     description="Mote - the pattern library framework.",
-    long_description = open("README.rst", "r").read() + open("AUTHORS.rst", "r").read() + open("CHANGELOG.rst", "r").read(),
-    author="Praekelt Consulting",
-    author_email="dev@praekelt.com",
+    long_description=open("README.rst", "r").read() + open("AUTHORS.rst", "r").read() + open("CHANGELOG.rst", "r").read(),
+    author="Praekelt Foundation",
+    author_email="dev@praekelt.org",
+    url="https://github.com/praekelt/mote",
     license="BSD",
     packages=find_packages(),
     zip_safe=True,
@@ -30,7 +31,10 @@ setup(
         "djangorestframework-jwt",
         "djangorestframework",
         "xmltodict",
-        "PyYAML"
+        "PyYAML",
+        "yamlordereddictloader",
+        "pypandoc",
+        "dill"
     ],
     tests_require=[
         "tox",

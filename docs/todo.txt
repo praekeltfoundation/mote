@@ -1,0 +1,1 @@
+Document archetypes in a deep merge section
