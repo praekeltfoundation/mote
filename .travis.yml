@@ -1,26 +1,24 @@
 language: python
 python:
-  - "3.6"
+- '3.6'
 env:
-  - TOXENV=django111-py27
-  - TOXENV=django111-py35
-  - TOXENV=django20-py35
-  - TOXENV=django225-py36
+- TOXENV=django111-py27
+- TOXENV=django111-py35
+- TOXENV=django20-py35
+- TOXENV=django225-py36
 
 install:
-  - pip install tox
-
+- pip install tox
 script: tox
 
 after_success:
-  - coveralls
-
+- coveralls
 deploy:
   provider: pypi
   distributions: sdist bdist_wheel
-  user: praekelt.org
+  user: __token__
   password:
-    secure: vd7EJcZekx4ws2cwEatVHjP7/GqY7S+f9vjtj34LN9I1TU2579W021BJrHDEeX/+mFuZfjcVDkDfm5l7oVKpUgweb3Zv1iHoRHAayh9qEgnf2wLOpETLqbVx/pNQvLOJaMLJ9BYvYt8xdLN9WD2gegGQ7uBe1dhZ9pWyI5yitFVzvo/uZNZ0TNYIhlu/2OtTgOU/dwWHkaFRDbp8HsAhKmbf5AfZhyrgAtO4UobvvX6KlwvFeK/K7p8JQo5M7o3OZYicmhOPWiC12ucE3N2NkpX3TnMYUt3r5oACd450awBn47Wn0HVZp16nfHe8FA2jrTrGNYsKlWt0J/G3SRTMI939ywNrhVLsifD5bv4dgUsJysFIavgpRNI8bz2oWJnmqfVPsWStY2Aj2/LnwzVZCeF+yPzryn+CQ+iNE1/l7l1g9cH1TDUlP0mugdszV++lP8W4kIIV55m12ECAQFRKki7Um80V7OOGyUAJI75AT1XvhFwBCS+BwSHD3HN6C/JUa7gywZSOHFyw9BToqbF3gSERSoHYfeqXUCDKkvLJLfJPMxO8OkAhb+xdGO/ZLpFuKA61H8v6+d1Gm6BJbWQyyfqGVuu8vNmgbgwCC5Fk5UaIRdmdGZN1PfxszOn1FNfhsMvC8uyXdmRNazHZlKOs6IWRGSqjXu67/ejMGLwFz1o=
+    secure: hCFsFXn3x1DO23LB91l80YTvZRXWNUt+HHXukReQ/DFwXp3ar8sX7usCLyRwqjT+hibAbppJobCpINARPkczMWFnyk6sUQbw2BexR41a1pwCR4xR9mA7ap+fVkwAkFOy+FPl1H7xgKdmZpFmO6HvU7Y0DfnOLLAdgDFM6lIHsycnJEnxy5PfaiPaUwbW7pzjo2Z1XCMRI+Q+iBsUsSI2IwjrogrurNhmEClv9clcy+h1iHRwztAdDcSW23y6GiJSVK2+60Fh+FHMKIJZjGQDISKpnkIwdB7fmbTOOtGvPU+r+v7UjDxLFlBBNRt6YYSIVdntBGQX4gWwA40ajWp2cT1AXupi6HQkGzYgRdElnGozoH2orU19uHQFukunwP9+pic3SXBZwwCvtsB+dwNZlEVXxCdoq9vD5XsWfkYquMug9iYlzAO8O+RTCZC75E4Gjtf1z5fyV8vqQUlJUhp81mxqRXwGUI7Srl6nfFz6D6OKeWLfs1l8yMUQZNJr9nmnQTUBnLOW7+shj2X70VTY5m2XdgZx9IATjuWj6FbhqvNKczOaZLmj8NGK08tOnUoqqu97+txyI7Pj77joFDv3Dpag11Adf+hLdFNtM6PMdZfJgjnVyYfF+RlzRk8zLrVfdI6KNaKGAY5oX8wswEQU3LEk/nWQA9kLOpDToM+xu7M=
   on:
     tags: true
     python: 3.6
