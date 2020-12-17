@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.2.0
+-----
+Add Django 3 compatibility
+
 0.1.6
 -----
 #. First release.
